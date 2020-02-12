@@ -48,6 +48,8 @@ const (
 	RevertImage         = iota
 )
 
+type loglevel = log.LogLevel
+
 // APIHandler represent attributes of API handler
 type APIHandler struct {
 	deviceMgr                 *DeviceManager
@@ -191,12 +193,12 @@ func (handler *APIHandler) UpdateLogLevel(ctx context.Context, logging *voltha.L
 	log.Debugw("UpdateLogLevel-request", log.Fields{"package": logging.PackageName, "intval": int(logging.Level)})
 
 	if logging.PackageName == "" {
-		log.SetAllLogLevel(int(logging.Level))
-		log.SetDefaultLogLevel(int(logging.Level))
+		log.SetAllLogLevel(loglevel(logging.Level))
+		log.SetDefaultLogLevel(loglevel(logging.Level))
 	} else if logging.PackageName == "default" {
-		log.SetDefaultLogLevel(int(logging.Level))
+		log.SetDefaultLogLevel(loglevel(logging.Level))
 	} else {
-		log.SetPackageLogLevel(logging.PackageName, int(logging.Level))
+		log.SetPackageLogLevel(logging.PackageName, loglevel(logging.Level))
 	}
 
 	return &empty.Empty{}, nil
